@@ -9,6 +9,13 @@ verify(Input) :-
     % U - Currently recorded states
     % F - CTL Formula to check.
 
+% UTILS %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+    % A - The list of available states
+    % B - The list of blacklisted states
+    % C - The result
+
+    not_member(Available, Blacklist, A) :- member(A, Available), not(member(A, Blacklist)).
 
 % OPERATIONS %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
@@ -25,7 +32,7 @@ verify(Input) :-
 
 
     % AX
-    %check(T, L, S, U, ax(X)) :- ...
+    % check(T, L, S, U, ax(X)) :- 
 
 
     % EX
