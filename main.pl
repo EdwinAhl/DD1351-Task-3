@@ -20,7 +20,7 @@ verify(Input) :-
 % OPERATIONS %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
     % Neg
-    %check(_, L, S, U, neg(X)) :- ...
+    check(_, L, S, U, neg(X)) :- member([S, R], L), not(member(X, R)).
 
 
     % And
@@ -56,4 +56,4 @@ verify(Input) :-
 
 
     % Literals
-    %check(_, L, S, U, X) :- ...
+    check(_, L, S, U, X) :- member([S, R], L), member(X, R).
