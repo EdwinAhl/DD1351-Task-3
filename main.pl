@@ -49,4 +49,4 @@ verify(Input) :-
 
 
     % Literals
-    %check(_, L, S, U, X) :- ...
+    check(_, L, S, U, X) :- member([S, R], L), member(X, R).
