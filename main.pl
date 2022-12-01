@@ -37,19 +37,24 @@ verify(Input) :-
     % Or
     check(T, L, S, U, or(F,G)) :- check(T, L, S, U, F) ; check(T, L, S, U, G).
 
+
     % AX
-    check(T, L, S, U, ax(X)) :- 
-        % Find the available next states
-        member([S, AvailableStates], T), 
-        % Add the current state to RecordedStates
-        appendEl(S, U, RecordedStates)
-        % Generate an available state
-        not_member(AvailableStates, RecordedStates, NewState), 
-        % Check X in the new state
-        check(T, L, NewState, RecordedStates, X).
+    %check(T, L, S, U, ax(X)) :- ...
+
 
     % EX
-    %check(T, L, S, U, ex(X)) :- ...
+    check(T, L, S, U, ex(X)) :- 
+        % Find the available next states
+        member([S, AvailableStates], T),
+
+        % Add the current state to RecordedStates
+        appendEl(S, U, RecordedStates),
+
+        % Generate an available state
+        not_member(AvailableStates, RecordedStates, NewState), 
+
+        % Check X in the new state
+        check(T, L, NewState, RecordedStates, X).
 
 
     % AG
