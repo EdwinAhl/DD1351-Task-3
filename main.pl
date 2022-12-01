@@ -12,10 +12,6 @@ verify(Input) :-
 
 % OPERATIONS %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-    % Literals
-    %check(_, L, S, U, X) :- ...
-
-
     % Neg
     %check(_, L, S, U, neg(X)) :- ...
 
@@ -50,3 +46,7 @@ verify(Input) :-
 
     % AF
     %check(T, L, S, U, af(X)) :- ...
+
+
+    % Literals
+    %check(_, L, S, U, X) :- ...
