@@ -61,12 +61,14 @@ verify(Input) :-
 
     % AG
     check(T, L, S, U, ag(X)) :- 
+        % Check current state
         check(T, L, S, U, X),
 
         % Add the current state to RecordedStates
         appendEl(S, U, RecordedStates),
         member([S, AvailableStates], T),
 
+        % Go throgh all AvailableStates 
         foreach(
             not_member(AvailableStates, U, NewState),
             check(T, L, NewState, RecordedStates, ag(X))
@@ -122,6 +124,7 @@ verify(Input) :-
         eg(T, L, NewState, RecordedStates, X).
 
 
+
     % EF
     check(T, L, S, U, ef(X)) :-     
         % Find the available next states
@@ -142,6 +145,7 @@ verify(Input) :-
         not_member(AvailableStates2, U, NewState2),
 
         check(T, L, NewState2, RecordedStates2, X).
+
 
     % AF
     check(T, L, S, U, af(X)) :- 
