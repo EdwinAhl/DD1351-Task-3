@@ -64,8 +64,45 @@ verify(Input) :-
 
 
     % EG
-    %check(T, L, S, U, eg(X)) :- ...
-    
+    check(T, L, S, U, eg(X)) :- 
+        % Find the available next states
+        member([S, AvailableStates], T),
+
+        % Add the current state to RecordedStates
+        appendEl(S, U, RecordedStates),
+
+        % Generate an available state
+        not_member(AvailableStates, U, NewState),
+
+        % Either continue checking all states for eg
+        check(T, L, NewState, RecordedStates, eg(X));
+
+        % If the current state is correct then go to eg
+        check(T, L, S, U, X),
+        % Eg basically keeps checking that a path is always valid.
+        eg(T, L, NewState, [], X).
+
+    % Base case for eg, when no paths are left to take.
+    eg(T, L, S, U, X) :- member([S, AvailableStates], T), 
+        appendEl(S, U, RecordedStates),
+        not(not_member(AvailableStates, U, _)),
+        check(T, L, S, U, X).
+
+    % When the EG check is working.
+    eg(T, L, S, U, X) :-
+        % Find the available next states
+        member([S, AvailableStates], T),
+
+        % Add the current state to RecordedStates
+        appendEl(S, U, RecordedStates),
+
+        % Current path is valid
+        check(T, L, S, U, X),
+
+        foreach(
+            not_member(AvailableStates, U, NewState),
+            eg(T, L, NewState, RecordedStates, X)
+        ).
 
     % EF
     %check(T, L, S, U, ef(X)) :- ...
