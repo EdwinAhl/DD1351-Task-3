@@ -61,12 +61,14 @@ verify(Input) :-
 
     % AG
     check(T, L, S, U, ag(X)) :- 
+        % Check current state
         check(T, L, S, U, X),
 
         % Add the current state to RecordedStates
         appendEl(S, U, RecordedStates),
         member([S, AvailableStates], T),
 
+        % Go throgh all AvailableStates 
         foreach(
             not_member(AvailableStates, U, NewState),
             check(T, L, NewState, RecordedStates, ag(X))
@@ -109,6 +111,7 @@ verify(Input) :-
         % Current path is valid
         check(T, L, S, U, X),
 
+        % Go through all AvailableStates
         foreach(
             not_member(AvailableStates, U, NewState),
             eg(T, L, NewState, RecordedStates, X)
@@ -135,6 +138,7 @@ verify(Input) :-
         not_member(AvailableStates2, U, NewState2),
 
         check(T, L, NewState2, RecordedStates2, X).
+
 
     % AF
     %check(T, L, S, U, af(X)) :- ...
