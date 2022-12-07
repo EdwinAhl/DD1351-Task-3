@@ -137,7 +137,17 @@ verify(Input) :-
         check(T, L, NewState2, RecordedStates2, X).
 
     % AF
-    %check(T, L, S, U, af(X)) :- ...
+    check(T, L, S, U, af(X)) :- 
+        check(T, L, S, U, X);
+
+        % Add the current state to RecordedStates
+        appendEl(S, U, RecordedStates),
+        member([S, AvailableStates], T),
+
+        foreach(
+            not_member(AvailableStates, U, NewState),
+            check(T, L, NewState, RecordedStates, af(X))
+        ).
 
 
     % Literals
