@@ -68,7 +68,16 @@ verify(Input) :-
     
 
     % EF
-    %check(T, L, S, U, ef(X)) :- ...
+    check(T, L, S, U, ef(X)) :- 
+        member([S, AvailableStates], T),
+        foreach(not_member(AvailableStates, U, NewState), check_ef(T, L, NewState, U, X)).
+    
+    check_ef(T, L, NewState, U, X) :- member([NewState, R], L), member(X, R).
+    check_ef(T, L, NewState, U, X) :- 
+        not_member(AvailableStates, RecordedStates, NewState), 
+        appendEl(S, U, RecordedStates),
+        check(T, L, S, RecordedStates, ef(X)).
+        
 
 
     % AF
