@@ -51,7 +51,7 @@ verify(Input) :-
         appendEl(S, U, RecordedStates),
 
         % Generate an available state
-        not_member(AvailableStates, RecordedStates, NewState), 
+        not_member(AvailableStates, U, NewState), 
 
         % Check X in the new state
         check(T, L, NewState, RecordedStates, X).
