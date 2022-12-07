@@ -17,8 +17,8 @@ verify(Input) :-
 
     not_member(Available, Blacklist, A) :- member(A, Available), not(member(A, Blacklist)).
 
-    append([],L,L).
-    append([H|T],L,[H|R]) :- append(T,L,R).
+    %append([],L,L).
+    %append([H|T],L,[H|R]) :- append(T,L,R).
 
     appendEl(X, [], [X]).
     appendEl(X, [H | T], [H | Y]) :-
@@ -90,13 +90,21 @@ verify(Input) :-
         % If the current state is correct then go to eg
         check(T, L, S, U, X),
         % Eg basically keeps checking that a path is always valid.
-        eg(T, L, NewState, [], X).
 
-    % Base case for eg, when no paths are left to take.
-    eg(T, L, S, U, X) :- member([S, AvailableStates], T), 
+        eg(T, L, S, [], X).
+
+    % Base case for eg
+    eg(T, L, S, U, X) :-
+        % when you can loop back to a working state
+        member([S, AvailableStates], T),
         appendEl(S, U, RecordedStates),
-        not(not_member(AvailableStates, U, _)),
-        check(T, L, S, U, X).
+        member(RecordedState, RecordedStates),
+        member(RecordedState, AvailableStates),
+        check(T, L, S, [], X);
+
+        % Or no way to go
+        member([S, AvailableStates2], T),
+        not(not_member(AvailableStates2, U, _)).
 
     % When the EG check is working.
     eg(T, L, S, U, X) :-
@@ -109,10 +117,9 @@ verify(Input) :-
         % Current path is valid
         check(T, L, S, U, X),
 
-        foreach(
-            not_member(AvailableStates, U, NewState),
-            eg(T, L, NewState, RecordedStates, X)
-        ).
+        not_member(AvailableStates, U, NewState),
+
+        eg(T, L, NewState, RecordedStates, X).
 
 
     % EF
