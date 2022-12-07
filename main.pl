@@ -136,16 +136,14 @@ verify(Input) :-
         % Generate an available state
         not_member(AvailableStates, U, NewState),
 
-        % Check X in the new state
-        check(T, L, NewState, RecordedStates, ef(X));
-
         % WHAT THE FUCK
         member([S, AvailableStates2], T),
         appendEl(S, U, RecordedStates2),
         not_member(AvailableStates2, U, NewState2),
+        check(T, L, NewState2, RecordedStates2, X);
 
-        check(T, L, NewState2, RecordedStates2, X).
-
+        % Check X in the new state
+        check(T, L, NewState, RecordedStates, ef(X)).
 
     % AF
     check(T, L, S, U, af(X)) :- 
