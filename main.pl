@@ -31,7 +31,9 @@ verify(Input) :-
 
 
     % And
-    check(T, L, S, U, and(F,G)) :- check(T, L, S, [], F), check(T, L, S, [], G).
+    check(T, L, S, U, and(F,G)) :- 
+        check(T, L, S, [], F),
+        check(T, L, S, [], G).
 
 
     % Or
@@ -41,7 +43,13 @@ verify(Input) :-
     % AX
     check(T, L, S, U, ax(X)) :- 
         member([S, AvailableStates], T),
-        foreach(not_member(AvailableStates, U, NewState), check(T, L, NewState, [], X)).
+
+        % Must be at least one input, otherwise foreach will be true with no items.
+        not_member(AvailableStates, U, _),
+        foreach(
+            not_member(AvailableStates, U, NewState),
+            check(T, L, NewState, [], X)
+        ).
     
 
     % EX
@@ -55,11 +63,10 @@ verify(Input) :-
         % Check X in the new state
         check(T, L, NewState, [], X).
 
-
     % AG
     check(T, L, S, U, ag(X)) :- 
         % Check current state
-        check(T, L, S, [], X);
+        check(T, L, S, [], X),
 
         % Add the current state to RecordedStates
         appendEl(S, U, RecordedStates),
@@ -69,7 +76,23 @@ verify(Input) :-
         foreach(
             not_member(AvailableStates, U, NewState),
             check(T, L, NewState, RecordedStates, ag(X))
-        ).
+        ),
+        % Otherwise infinite results
+        !.
+
+    % Base case for eg
+    check(T, L, S, U, eg(X)) :-
+        % when you can loop back to a working state
+        member([S, AvailableStates], T),
+        appendEl(S, U, RecordedStates),
+        member(RecordedState, RecordedStates),
+        member(RecordedState, AvailableStates),
+        check(T, L, S, [], X);
+
+        % Or no way to go
+        member([S, AvailableStates2], T),
+        not(not_member(AvailableStates2, U, _)),
+        check(T, L, S, [], X).
 
     % EG
     check(T, L, S, U, eg(X)) :- 
@@ -83,43 +106,11 @@ verify(Input) :-
         not_member(AvailableStates, U, NewState),
 
         % Either continue checking all states for eg
-        check(T, L, NewState, RecordedStates, eg(X));
-
-        % If the current state is correct then go to eg
         check(T, L, S, [], X),
-        % Eg basically keeps checking that a path is always valid.
 
-        eg(T, L, S, [], X).
-
-    % Base case for eg
-    eg(T, L, S, U, X) :-
-        % when you can loop back to a working state
-        member([S, AvailableStates], T),
-        appendEl(S, U, RecordedStates),
-        member(RecordedState, RecordedStates),
-        member(RecordedState, AvailableStates),
-        check(T, L, S, [], X);
-
-        % Or no way to go
-        member([S, AvailableStates2], T),
-        not(not_member(AvailableStates2, U, _)).
-
-    % When the EG check is working.
-    eg(T, L, S, U, X) :-
-        % Find the available next states
-        member([S, AvailableStates], T),
-
-        % Add the current state to RecordedStates
-        appendEl(S, U, RecordedStates),
-
-        % Current path is valid
-        check(T, L, S, U, X),
-
-        not_member(AvailableStates, U, NewState),
-
-        eg(T, L, NewState, RecordedStates, X).
-
-
+        check(T, L, NewState, RecordedStates, eg(X)), 
+        % Prevent running multiple times
+        !.
 
     % EF
     check(T, L, S, U, ef(X)) :-     
@@ -135,15 +126,24 @@ verify(Input) :-
         % Generate an available state
         not_member(AvailableStates, U, NewState),
 
-        check(T, L, NewState, RecordedStates, ef(X)).
+        check(T, L, NewState, RecordedStates, ef(X)),
+        % Prevent running multiple times
+        !.
 
     % AF
-    check(T, L, S, U, af(X)) :- 
+    check(T, L, S, U, af(X)) :-
         check(T, L, S, [], X);
 
         % Add the current state to RecordedStates
         appendEl(S, U, RecordedStates),
         member([S, AvailableStates], T),
+
+        % Disallow looping back to a false state
+        % AF is false if a false state can be looped. 
+        not(member(S, AvailableStates)),
+
+        % Must be a next state to do a for loop.
+        not_member(AvailableStates, U, _),
 
         foreach(
             not_member(AvailableStates, U, NewState),
