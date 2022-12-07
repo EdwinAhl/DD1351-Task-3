@@ -1,0 +1,19 @@
+[[s1, [s2, s3]],
+ [s2, s3],
+ [s3, [s1, s6]],
+ [s4, [s1, s3, s4],
+ [s5, [s2, s3],
+ [s6, s7],
+ [s7, s4]]].
+
+[[s1, []],
+  [s2, [start, error]],
+  [s3, close]
+  [s4, [close, heat]],
+  [s5, [start, close, error]],
+  [s6, [start, close]],
+  [s7, [start, close, heat]]].
+
+s1.
+
+not(and(eg(close), eg(heat))).
