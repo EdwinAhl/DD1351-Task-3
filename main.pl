@@ -39,8 +39,10 @@ verify(Input) :-
 
 
     % AX
-    %check(T, L, S, U, ax(X)) :- ...
-
+    check(T, L, S, U, ax(X)) :- 
+        member([S, AvailableStates], T),
+        foreach(not_member(AvailableStates, U, NewState), check(T, L, NewState, U, X)).
+    
 
     % EX
     check(T, L, S, U, ex(X)) :- 
