@@ -60,8 +60,11 @@ verify(Input) :-
 
 
     % AG
-    %check(T, L, S, U, ag(X)) :- ...
-
+    check(T, L, S, U, ag(X)) :- 
+        check(T, L, S, U, X), 
+        member([S, AvailableStates], T),
+        foreach(not_member(AvailableStates, U, NewState), check(T, L, NewState, U, ag(X))).
+       
 
     % EG
     check(T, L, S, U, eg(X)) :- 
@@ -107,17 +110,17 @@ verify(Input) :-
 
     % EF
     check(T, L, S, U, ef(X)) :-     
-         % Find the available next states
-         member([S, AvailableStates], T),
+        % Find the available next states
+        member([S, AvailableStates], T),
+        % Add the current state to RecordedStates
+        appendEl(S, U, RecordedStates),
 
-         % Add the current state to RecordedStates
-         appendEl(S, U, RecordedStates),
- 
-         % Generate an available state
-         not_member(AvailableStates, U, NewState), 
- 
-         % Check X in the new state
-         check(T, L, NewState, RecordedStates, X) ; check(T, L, NewState, RecordedStates, ef(X)).
+        % Generate an available state
+        not_member(AvailableStates, U, NewState), 
+
+        % Check X in the new state
+        check(T, L, NewState, RecordedStates, ef(X)) ; check(T, L, NewState, RecordedStates, X).
+
 
     % AF
     %check(T, L, S, U, af(X)) :- ...
