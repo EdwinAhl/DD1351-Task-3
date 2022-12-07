@@ -107,17 +107,24 @@ verify(Input) :-
 
     % EF
     check(T, L, S, U, ef(X)) :-     
-         % Find the available next states
-         member([S, AvailableStates], T),
+        % Find the available next states
+        member([S, AvailableStates], T),
 
-         % Add the current state to RecordedStates
-         appendEl(S, U, RecordedStates),
- 
-         % Generate an available state
-         not_member(AvailableStates, U, NewState), 
- 
-         % Check X in the new state
-         check(T, L, NewState, RecordedStates, X) ; check(T, L, NewState, RecordedStates, ef(X)).
+        % Add the current state to RecordedStates
+        appendEl(S, U, RecordedStates),
+
+        % Generate an available state
+        not_member(AvailableStates, U, NewState),
+
+        % Check X in the new state
+        check(T, L, NewState, RecordedStates, ef(X));
+
+        % WHAT THE FUCK
+        member([S, AvailableStates2], T),
+        appendEl(S, U, RecordedStates2),
+        not_member(AvailableStates2, U, NewState2),
+
+        check(T, L, NewState2, RecordedStates2, X).
 
     % AF
     %check(T, L, S, U, af(X)) :- ...
