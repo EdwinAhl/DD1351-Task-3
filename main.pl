@@ -104,18 +104,20 @@ verify(Input) :-
             eg(T, L, NewState, RecordedStates, X)
         ).
 
-    % EF
-    check(T, L, S, U, ef(X)) :- 
-        member([S, AvailableStates], T),
-        foreach(not_member(AvailableStates, U, NewState), check_ef(T, L, NewState, U, X)).
-    
-    check_ef(T, L, NewState, U, X) :- member([NewState, R], L), member(X, R).
-    check_ef(T, L, NewState, U, X) :- 
-        not_member(AvailableStates, RecordedStates, NewState), 
-        appendEl(S, U, RecordedStates),
-        check(T, L, S, RecordedStates, ef(X)).
-        
 
+    % EF
+    check(T, L, S, U, ef(X)) :-     
+         % Find the available next states
+         member([S, AvailableStates], T),
+
+         % Add the current state to RecordedStates
+         appendEl(S, U, RecordedStates),
+ 
+         % Generate an available state
+         not_member(AvailableStates, U, NewState), 
+ 
+         % Check X in the new state
+         check(T, L, NewState, RecordedStates, X) ; check(T, L, NewState, RecordedStates, ef(X)).
 
     % AF
     %check(T, L, S, U, af(X)) :- ...
