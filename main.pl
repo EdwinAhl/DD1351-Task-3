@@ -61,10 +61,17 @@ verify(Input) :-
 
     % AG
     check(T, L, S, U, ag(X)) :- 
-        check(T, L, S, U, X), 
+        check(T, L, S, U, X),
+
+        % Add the current state to RecordedStates
+        appendEl(S, U, RecordedStates),
         member([S, AvailableStates], T),
-        foreach(not_member(AvailableStates, U, NewState), check(T, L, NewState, U, ag(X))).
-       
+
+        foreach(
+            not_member(AvailableStates, U, NewState),
+            check(T, L, NewState, RecordedStates, ag(X))
+        ).
+
 
     % EG
     check(T, L, S, U, eg(X)) :- 
