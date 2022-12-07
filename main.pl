@@ -31,17 +31,17 @@ verify(Input) :-
 
 
     % And
-    check(T, L, S, U, and(F,G)) :- check(T, L, S, U, F), check(T, L, S, U, G).
+    check(T, L, S, U, and(F,G)) :- check(T, L, S, [], F), check(T, L, S, [], G).
 
 
     % Or
-    check(T, L, S, U, or(F,G)) :- check(T, L, S, U, F) ; check(T, L, S, U, G).
+    check(T, L, S, U, or(F,G)) :- check(T, L, S, [], F) ; check(T, L, S, [], G).
 
 
     % AX
     check(T, L, S, U, ax(X)) :- 
         member([S, AvailableStates], T),
-        foreach(not_member(AvailableStates, U, NewState), check(T, L, NewState, U, X)).
+        foreach(not_member(AvailableStates, U, NewState), check(T, L, NewState, [], X)).
     
 
     % EX
@@ -49,20 +49,17 @@ verify(Input) :-
         % Find the available next states
         member([S, AvailableStates], T),
 
-        % Add the current state to RecordedStates
-        appendEl(S, U, RecordedStates),
-
         % Generate an available state
         not_member(AvailableStates, U, NewState), 
 
         % Check X in the new state
-        check(T, L, NewState, RecordedStates, X).
+        check(T, L, NewState, [], X).
 
 
     % AG
     check(T, L, S, U, ag(X)) :- 
         % Check current state
-        check(T, L, S, U, X),
+        check(T, L, S, [], X);
 
         % Add the current state to RecordedStates
         appendEl(S, U, RecordedStates),
@@ -73,7 +70,6 @@ verify(Input) :-
             not_member(AvailableStates, U, NewState),
             check(T, L, NewState, RecordedStates, ag(X))
         ).
-
 
     % EG
     check(T, L, S, U, eg(X)) :- 
@@ -90,7 +86,7 @@ verify(Input) :-
         check(T, L, NewState, RecordedStates, eg(X));
 
         % If the current state is correct then go to eg
-        check(T, L, S, U, X),
+        check(T, L, S, [], X),
         % Eg basically keeps checking that a path is always valid.
 
         eg(T, L, S, [], X).
@@ -127,6 +123,9 @@ verify(Input) :-
 
     % EF
     check(T, L, S, U, ef(X)) :-     
+        % Check X in the current state
+        check(T, L, S, [], X);
+
         % Find the available next states
         member([S, AvailableStates], T),
 
@@ -136,18 +135,11 @@ verify(Input) :-
         % Generate an available state
         not_member(AvailableStates, U, NewState),
 
-        % WHAT THE FUCK
-        member([S, AvailableStates2], T),
-        appendEl(S, U, RecordedStates2),
-        not_member(AvailableStates2, U, NewState2),
-        check(T, L, NewState2, RecordedStates2, X);
-
-        % Check X in the new state
         check(T, L, NewState, RecordedStates, ef(X)).
 
     % AF
     check(T, L, S, U, af(X)) :- 
-        check(T, L, S, U, X);
+        check(T, L, S, [], X);
 
         % Add the current state to RecordedStates
         appendEl(S, U, RecordedStates),
