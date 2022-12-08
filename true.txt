@@ -16,4 +16,4 @@
 
 s1.
 
-and(ex(start), ex(error)).
+and(ef(eg(close)), ef(eg(heat))).

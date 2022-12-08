@@ -16,4 +16,4 @@
 
 s1.
 
-not(and(eg(close), eg(heat))).
+not(and(ef(eg(close)), ef(eg(heat)))).

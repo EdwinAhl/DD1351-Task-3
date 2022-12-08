@@ -27,7 +27,9 @@ verify(Input) :-
 % OPERATIONS %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
     % Neg
-    check(_, L, S, U, neg(X)) :- member([S, R], L), not(member(X, R)).
+    check(_, L, S, U, neg(X)) :- 
+        member([S, R], L), 
+        not(member(X, R)).
 
 
     % And
@@ -37,7 +39,9 @@ verify(Input) :-
 
 
     % Or
-    check(T, L, S, U, or(F,G)) :- check(T, L, S, [], F) ; check(T, L, S, [], G).
+    check(T, L, S, U, or(F,G)) :- 
+        check(T, L, S, [], F); 
+        check(T, L, S, [], G).
 
 
     % AX
