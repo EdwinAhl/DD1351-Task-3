@@ -13,6 +13,8 @@ Model checker for CTL
 - AF(X)
 
 ## Example
+![alt text](https://github.com/EdwinAhl/DD1351-Task-3/blob/master/model.jpg)
+
 [[s1, [s2, s3]],
  [s2, [s3]],
  [s3, [s1, s6]],
